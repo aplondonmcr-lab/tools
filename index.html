@@ -12,25 +12,26 @@
       font-family: Arial, sans-serif;
       background-color: #f0f4f8;
       margin: 0;
-      padding: 2rem 1rem;
+      padding: 1.25rem 0.75rem;
       display: flex;
       flex-direction: column;
       align-items: center;
+      font-size: 0.95rem;
     }
 
     .tabs {
       display: flex;
-      margin-bottom: 1rem;
-      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+      gap: 0.4rem;
       flex-wrap: wrap;
     }
     .tab-button {
-      padding: 0.75rem 1.25rem;
+      padding: 0.5rem 0.9rem;
       border: none;
-      border-radius: 8px;
+      border-radius: 6px;
       background-color: #e0e0e0;
       cursor: pointer;
-      font-size: 1rem;
+      font-size: 0.9rem;
       transition: background-color 0.3s ease;
     }
     .tab-button.active {
@@ -41,66 +42,65 @@
     .tool {
       display: none;
       background-color: #ffffff;
-      padding: 1.5rem;
-      border-radius: 12px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      width: 90%;
-      max-width: 600px;
+      padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.08);
+      width: 95%;
+      max-width: 520px;
     }
     .tool.active {
       display: block;
     }
 
-    h1, h2 {
-      font-size: 1.3rem;
-      margin-bottom: 1rem;
+    h1 {
+      font-size: 1.1rem;
+      margin: 0 0 0.75rem 0;
+      text-align: center;
+    }
+    h2 {
+      font-size: 1rem;
+      margin-bottom: 0.75rem;
       text-align: center;
     }
     label {
       display: block;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.35rem;
       font-weight: bold;
+      font-size: 0.9rem;
     }
     input[type="text"],
     input[type="number"],
     textarea {
       width: 100%;
-      padding: 0.75rem;
-      font-size: 1rem;
+      padding: 0.5rem;
+      font-size: 0.9rem;
       border: 1px solid #ccc;
-      border-radius: 8px;
-      margin-bottom: 1rem;
+      border-radius: 6px;
+      margin-bottom: 0.75rem;
       font-family: inherit;
     }
     textarea {
-      min-height: 120px;
+      min-height: 90px;
       resize: vertical;
-    }
-    .inline-inputs {
-      display: flex;
-      gap: 0.5rem;
-    }
-    .inline-inputs input {
-      flex: 1;
     }
     button {
       width: 100%;
-      padding: 0.75rem;
-      font-size: 1rem;
+      padding: 0.55rem;
+      font-size: 0.9rem;
       background-color: #0077cc;
       color: #fff;
       border: none;
-      border-radius: 8px;
+      border-radius: 6px;
       cursor: pointer;
       transition: background-color 0.3s ease;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.35rem;
     }
     button:hover {
       background-color: #005fa3;
     }
     .result {
-      margin-top: 1rem;
-      font-size: 1rem;
+      margin-top: 0.6rem;
+      font-size: 0.9rem;
       text-align: left;
       white-space: pre-line;
       word-break: break-all;
@@ -111,14 +111,14 @@
     }
     .error {
       color: #b00020;
-      margin-bottom: 0.5rem;
-      font-size: 0.95rem;
+      margin-bottom: 0.4rem;
+      font-size: 0.85rem;
     }
     .checkbox-row {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
-      margin-bottom: 0.75rem;
+      gap: 0.4rem;
+      margin-bottom: 0.6rem;
     }
     .checkbox-row input[type="checkbox"] {
       width: auto;
@@ -126,26 +126,32 @@
     }
     .result-row {
       display: flex;
-      gap: 0.5rem;
+      gap: 0.4rem;
       align-items: center;
       margin-top: 0.25rem;
     }
     .result-row input[type="text"] {
       flex: 1;
-      margin-bottom: 0; /* avoid extra gap inside result */
+      margin-bottom: 0;
     }
     .result-row button {
       width: auto;
-      padding: 0.5rem 0.75rem;
+      padding: 0.4rem 0.6rem;
       margin-bottom: 0;
       white-space: nowrap;
+      font-size: 0.85rem;
+    }
+    p.small {
+      margin-top: 0;
+      margin-bottom: 0.75rem;
+      font-size: 0.85rem;
     }
     @media (max-width: 400px) {
       h1, h2 {
-        font-size: 1.1rem;
+        font-size: 1rem;
       }
-      .result {
-        font-size: 0.95rem;
+      body {
+        font-size: 0.9rem;
       }
     }
   </style>
@@ -158,6 +164,7 @@
   <div class="tabs">
     <button class="tab-button active" onclick="switchTab('trimmer')">Embed URL Trimmer</button>
     <button class="tab-button" onclick="switchTab('srt')">SRT URL Builder</button>
+    <button class="tab-button" onclick="switchTab('ytplaylist')">YouTube Playlist Builder</button>
   </div>
 
   <!-- UNTV Embed URL Trimmer -->
@@ -211,6 +218,32 @@
       <div class="result-row">
         <input type="text" id="srtUrlOutput" readonly />
         <button type="button" onclick="copySrtUrl()">Copy</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- YouTube Playlist Builder -->
+  <div id="ytplaylist" class="tool">
+    <h2>YouTube Playlist Builder</h2>
+
+    <p class="small">
+      Paste any text that contains YouTube URLs or video IDs (titles, notes, etc.).<br/>
+      The tool will extract the IDs, de-duplicate them, and build a playlist URL.
+    </p>
+
+    <label for="ytBulkInput">Paste text with YouTube URLs</label>
+    <textarea id="ytBulkInput" placeholder="e.g. titles + https://youtu.be/... links, etc."></textarea>
+
+    <button onclick="buildYoutubePlaylist()">Build Playlist URL</button>
+    <button onclick="resetYoutubePlaylist()">Reset</button>
+
+    <div id="ytError" class="error"></div>
+
+    <div class="result" id="ytResult">
+      <strong>Playlist URL</strong>
+      <div class="result-row">
+        <input type="text" id="ytPlaylistUrl" readonly />
+        <button type="button" onclick="copyYoutubePlaylist()">Copy</button>
       </div>
     </div>
   </div>
@@ -357,6 +390,108 @@
 
     function copySrtUrl() {
       const value = document.getElementById('srtUrlOutput').value;
+      if (!value) return;
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(value);
+      } else {
+        const temp = document.createElement('textarea');
+        temp.value = value;
+        document.body.appendChild(temp);
+        temp.select();
+        document.execCommand('copy');
+        document.body.removeChild(temp);
+      }
+    }
+
+    // ----- YouTube Playlist Builder -----
+    function extractYouTubeId(str) {
+      if (!str) return null;
+      const url = str.trim();
+      if (!url) return null;
+
+      const idPattern = /^[A-Za-z0-9_-]{11}$/;
+
+      // Bare ID
+      if (idPattern.test(url)) return url;
+
+      let id = null;
+      const shortHost = 'youtu.be/';
+      const watchPattern = 'watch?v=';
+      const embedPattern = 'embed/';
+
+      let index = url.indexOf(shortHost);
+      if (index !== -1) {
+        id = url.substring(index + shortHost.length);
+      } else {
+        index = url.indexOf(watchPattern);
+        if (index !== -1) {
+          id = url.substring(index + watchPattern.length);
+        } else {
+          index = url.indexOf(embedPattern);
+          if (index !== -1) {
+            id = url.substring(index + embedPattern.length);
+          }
+        }
+      }
+
+      if (id) {
+        // Strip query / fragment
+        id = id.split(/[?&#]/)[0];
+      }
+
+      if (id && idPattern.test(id)) {
+        return id;
+      }
+
+      return null;
+    }
+
+    function buildYoutubePlaylist() {
+      const errorEl = document.getElementById('ytError');
+      const outputEl = document.getElementById('ytPlaylistUrl');
+      errorEl.textContent = '';
+      outputEl.value = '';
+
+      const raw = document.getElementById('ytBulkInput').value;
+      if (!raw.trim()) {
+        errorEl.textContent = 'Please paste some text containing YouTube URLs or video IDs.';
+        return;
+      }
+
+      const tokens = raw.split(/\s+/);
+      const ids = [];
+      const seen = new Set();
+
+      for (const token of tokens) {
+        const id = extractYouTubeId(token);
+        if (id && !seen.has(id)) {
+          seen.add(id);
+          ids.push(id);
+        }
+      }
+
+      if (ids.length === 0) {
+        errorEl.textContent = 'No valid YouTube URLs or video IDs were found in the pasted text.';
+        return;
+      }
+
+      const playlistUrl =
+        'https://www.youtube.com/watch_videos?video_ids=' +
+        ids.join(',') +
+        '&start_radio=1';
+
+      outputEl.value = playlistUrl;
+    }
+
+    function resetYoutubePlaylist() {
+      document.getElementById('ytBulkInput').value = '';
+      document.getElementById('ytError').textContent = '';
+      document.getElementById('ytPlaylistUrl').value = '';
+    }
+
+    function copyYoutubePlaylist() {
+      const value = document.getElementById('ytPlaylistUrl').value;
       if (!value) return;
 
       if (navigator.clipboard && navigator.clipboard.writeText) {
