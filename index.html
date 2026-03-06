@@ -162,25 +162,25 @@
 
   <!-- Tabs -->
   <div class="tabs">
-    <button class="tab-button active" onclick="switchTab('trimmer')">Embed URL Trimmer</button>
+    <button class="tab-button active" onclick="switchTab('trimmer')">UNTV URL Reformatter</button>
     <button class="tab-button" onclick="switchTab('srt')">SRT URL Builder</button>
     <button class="tab-button" onclick="switchTab('ytplaylist')">YouTube Playlist Builder</button>
   </div>
 
   <!-- UNTV Embed URL Trimmer -->
   <div id="trimmer" class="tool active">
-    <h2>UNTV Embed URL Trimmer</h2>
+    <h2>UNTV URL Reformatter</h2>
 
-    <label for="embedInput">Enter Embed URL</label>
-    <textarea id="embedInput" placeholder="Paste the full &lt;iframe ...&gt; embed here"></textarea>
+    <label for="embedInput">Enter UN WebTV page URL</label>
+	<textarea id="embedInput" placeholder="Paste URL e.g. https://webtv.un.org/en/asset/k1d/k1dh49l59x"></textarea>
 
-    <button onclick="trimEmbedUrl()">Trim URL</button>
+    <button onclick="trimEmbedUrl()">Reformat URL</button>
     <button onclick="resetTrimmer()">Reset</button>
 
     <div id="trimmerError" class="error"></div>
 
     <div class="result" id="trimmerResult">
-      <strong>Trimmed URL</strong>
+      <strong>Reformatted URL</strong>
       <div class="result-row">
         <input type="text" id="trimmedUrl" readonly />
         <button type="button" onclick="copyTrimmedUrl()">Copy</button>
@@ -258,64 +258,37 @@
     }
 
     // ----- UNTV Embed URL Trimmer -----
-    function trimEmbedUrl() {
-      const raw = document.getElementById('embedInput').value;
-      const errorEl = document.getElementById('trimmerError');
-      const outputEl = document.getElementById('trimmedUrl');
+    
+function trimEmbedUrl() {
+  const raw = document.getElementById('embedInput').value.trim();
+  const errorEl = document.getElementById('trimmerError');
+  const outputEl = document.getElementById('trimmedUrl');
 
-      errorEl.textContent = '';
-      outputEl.value = '';
+  errorEl.textContent = '';
+  outputEl.value = '';
 
-      if (!raw.trim()) {
-        errorEl.textContent = 'Please paste an embed URL or iframe code.';
-        return;
-      }
+  if (!raw) {
+    errorEl.textContent = 'Please paste a UN WebTV page URL.';
+    return;
+  }
 
-      const httpsIndex = raw.indexOf('https');
-      if (httpsIndex === -1) {
-        errorEl.textContent = 'Could not find a URL starting with "https" in the input.';
-        return;
-      }
+  // Extract the asset ID (k1xxxxxxx)
+  const match = raw.match(/k1[a-zA-Z0-9]+$/);
 
-      const marker = '&config[playback]';
-      const markerIndex = raw.indexOf(marker, httpsIndex);
+  if (!match) {
+    errorEl.textContent = 'Could not find a valid UN WebTV asset ID in the URL.';
+    return;
+  }
 
-      let trimmed;
-      if (markerIndex === -1) {
-        trimmed = raw.slice(httpsIndex).trim();
-      } else {
-        trimmed = raw.slice(httpsIndex, markerIndex).trim();
-      }
+  const assetId = match[0];          // e.g. k1dh49l59x
+  const entryId = '1_' + assetId.slice(2);  // remove k1 → dh49l59x
 
-      if (!trimmed) {
-        errorEl.textContent = 'Unable to extract a valid URL from the input.';
-        return;
-      }
+  const embedUrl =
+    'https://cdnapisec.kaltura.com/p/2503451/embedPlaykitJs/uiconf_id/49754663?iframeembed=true&entry_id=' +
+    entryId;
 
-      outputEl.value = trimmed;
-    }
-
-    function resetTrimmer() {
-      document.getElementById('embedInput').value = '';
-      document.getElementById('trimmerError').textContent = '';
-      document.getElementById('trimmedUrl').value = '';
-    }
-
-    function copyTrimmedUrl() {
-      const value = document.getElementById('trimmedUrl').value;
-      if (!value) return;
-
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(value);
-      } else {
-        const temp = document.createElement('textarea');
-        temp.value = value;
-        document.body.appendChild(temp);
-        temp.select();
-        document.execCommand('copy');
-        document.body.removeChild(temp);
-      }
-    }
+  outputEl.value = embedUrl;
+}
 
     // ----- SRT URL Builder -----
     function togglePassphrase() {
