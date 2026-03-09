@@ -272,7 +272,6 @@ function trimEmbedUrl() {
     return;
   }
 
-  // Extract the asset ID (k1xxxxxxx)
   const match = raw.match(/k1[a-zA-Z0-9]+$/);
 
   if (!match) {
@@ -280,14 +279,29 @@ function trimEmbedUrl() {
     return;
   }
 
-  const assetId = match[0];          // e.g. k1dh49l59x
-  const entryId = '1_' + assetId.slice(2);  // remove k1 → dh49l59x
+  const assetId = match[0];
+  const entryId = '1_' + assetId.slice(2);
 
   const embedUrl =
     'https://cdnapisec.kaltura.com/p/2503451/embedPlaykitJs/uiconf_id/49754663?iframeembed=true&entry_id=' +
     entryId;
 
   outputEl.value = embedUrl;
+}
+
+
+function copyTrimmedUrl() {
+  const value = document.getElementById('trimmedUrl').value;
+  if (!value) return;
+
+  navigator.clipboard.writeText(value);
+}
+
+
+function resetTrimmer() {
+  document.getElementById('embedInput').value = '';
+  document.getElementById('trimmedUrl').value = '';
+  document.getElementById('trimmerError').textContent = '';
 }
 
     // ----- SRT URL Builder -----
@@ -481,3 +495,4 @@ function trimEmbedUrl() {
   </script>
 </body>
 </html>
+
